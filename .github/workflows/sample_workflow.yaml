@@ -1,0 +1,10 @@
+name: Sample Workflow
+
+on:
+    pull_request:
+
+jobs:
+    run_workflow:
+        runs-on: ubuntu-latest
+        steps:
+            - run: export ABC=${{ secrets.ABC }} && ls .   
