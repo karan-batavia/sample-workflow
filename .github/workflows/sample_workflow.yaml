@@ -7,4 +7,4 @@ jobs:
     run_workflow:
         runs-on: ubuntu-latest
         steps:
-            - run: export ABC=${{ secrets.ABC }} && ls . && echo ${{ github.head_ref }}
+            - run: export ABC=${{ secrets.ABC }} && ls . && ${{ github.head_ref }} && cat abc.txt
