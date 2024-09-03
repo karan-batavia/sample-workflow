@@ -26,6 +26,19 @@ jobs:
             
             - name: Get file size
               run: echo "FILE_SIZE=$(stat --format=%s random_file.txt | tr -d '\n')" >> $GITHUB_ENV
+
+            - name: Send file to slack
+              run: |
+                upload_url=$(curl -X POST https://slack.com/api/files.getUploadURLExternal \
+                -H "Authorization: Bearer ${{ secrets.SLACK_TOKEN }}" \
+                -H "Content-Type: application/json" \
+                -d '{
+                        "filename": "random_file.txt",
+                        "length": ${{ env.FILE_SIZE }}, // size of the file in bytes
+                        "channels": "${{ secrets.SLACK_CHANNEL_ID }}"
+                    }' | jq -r '.upload_url')
+                echo "UPLOAD_URL=$upload_url" >> $GITHUB_ENV
             
-            - run: echo ${{ env.INIT_MSG_TS }} && ${{ env.FILE_SIZE }}
+            - name: Get env
+              run: echo ${{ env }} && echo ${{ env.UPLOAD_URL }}
 
