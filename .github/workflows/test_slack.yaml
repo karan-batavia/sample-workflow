@@ -22,8 +22,10 @@ jobs:
             
             - name: Save output to env
               id: save-output
-              run: echo "export INIT_MSG_TS=${{ steps.initial-message.outputs.ts }}" >> $GITHUB_ENV
+              run: echo "INIT_MSG_TS=${{ steps.initial-message.outputs.ts }}" >> $GITHUB_ENV
             
             - name: Get file size
-              run: echo "export FILE_SIZE=$(stat --format=%s random_file.txt | tr -d '\n')" >> $GITHUB_ENV && echo ${{ env.FILE_SIZE }}
+              run: echo "FILE_SIZE=$(stat --format=%s random_file.txt | tr -d '\n')" >> $GITHUB_ENV
+            
+            - run: echo ${{ env.INIT_MSG_TS }} && ${{ env.FILE_SIZE }}
 
