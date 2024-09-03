@@ -1,0 +1,29 @@
+name: Sample Workflow
+
+on:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    run_workflow:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Create a file 
+              run: openssl rand -base64 12 >> random_file.txt
+
+            - name: Send message to slack
+              id: initial-message
+              uses: slackapi/slack-github-action@v1.27.0
+              with:
+                channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+                slack-message : "Test message"
+              env:
+                SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+            
+            - name: Save output to env
+              id: save-output
+              run: echo "export INIT_MSG_TS=${{ steps.initial-message.outputs.ts }}" >> $GITHUB_ENV
+            
+            - name: Get file size
+              run: echo "export FILE_SIZE=$(stat --format=%s yourfile.zip | tr -d '\n')" >> $GITHUB_ENV && echo $GITHUB_ENV
+
